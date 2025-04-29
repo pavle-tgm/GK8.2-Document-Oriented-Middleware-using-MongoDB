@@ -5,62 +5,44 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import warehouse.model.ProductData;
+import warehouse.model.Warehouse;
+import warehouse.repository.ProductRepository;
 import warehouse.repository.WarehouseRepository;
 
 @SpringBootApplication
+@EnableMongoRepositories(basePackages = "warehouse.repository")
 public class Application implements CommandLineRunner {
 
 	@Autowired
-	private WarehouseRepository repository;
+	private ProductRepository productRepository;
+
+	@Autowired
+	private WarehouseRepository warehouseRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
 	}
 
 	@Override
-	public void run(String... args) throws Exception {
+	public void run(String... args) {
+		productRepository.deleteAll();
+		warehouseRepository.deleteAll();
 
-		// Initialize product data repository
-		repository.deleteAll();
+		warehouseRepository.save(new Warehouse("1", "Zentrallager Berlin", "10115", "Berlin", "Deutschland"));
 
-		// save a couple of product data
-		repository.save(new ProductData("1","00-443175","Bio Orangensaft Sonne","Getraenk", 2500));
-		repository.save(new ProductData("1","00-871895","Bio Apfelsaft Gold","Getraenk", 3420));
-		repository.save(new ProductData("1","01-926885","Ariel Waschmittel Color","Waschmittel", 478));
-		repository.save(new ProductData("1","02-234811","Mampfi Katzenfutter Rind","Tierfutter", 1324));
-		repository.save(new ProductData("2","03-893173","Saugstauberbeutel Ingres","Reinigung", 7390));
-		System.out.println();
+		productRepository.save(new ProductData("1", "P-001", "Bio Orangensaft", "Getränk", 1000));
+		productRepository.save(new ProductData("1", "P-002", "Bio Apfelsaft", "Getränk", 900));
+		productRepository.save(new ProductData("1", "P-003", "Mineralwasser", "Getränk", 1500));
 
-		// fetch all products
-		System.out.println("ProductData found with findAll():");
-		System.out.println("-------------------------------");
-		for (ProductData productdata : repository.findAll()) {
-			System.out.println(productdata);
-		}
-		System.out.println();
+		productRepository.save(new ProductData("1", "P-004", "Waschmittel Color", "Waschmittel", 700));
+		productRepository.save(new ProductData("1", "P-005", "Waschmittel Weiß", "Waschmittel", 800));
+		productRepository.save(new ProductData("1", "P-006", "Weichspüler", "Waschmittel", 600));
 
-		// Fetch single product
-		System.out.println("Record(s) found with ProductID(\"00-871895\"):");
-		System.out.println("--------------------------------");
-		System.out.println(repository.findByProductID("00-871895"));
-		System.out.println();
-
-		// Fetch all products of Warehouse 1
-		System.out.println("Record(s) found with findByWarehouseID(\"1\"):");
-		System.out.println("--------------------------------");
-		for (ProductData productdata : repository.findByWarehouseID("1")) {
-			System.out.println(productdata);
-		}
-		System.out.println();
-
-		// Fetch all products of Warehouse 2
-		System.out.println("Record(s) found with findByWarehouseID(\"2\"):");
-		System.out.println("--------------------------------");
-		for (ProductData productdata : repository.findByWarehouseID("2")) {
-			System.out.println(productdata);
-		}
-
+		productRepository.save(new ProductData("1", "P-007", "Katzenfutter Rind", "Tierfutter", 500));
+		productRepository.save(new ProductData("1", "P-008", "Hundefutter Huhn", "Tierfutter", 650));
+		productRepository.save(new ProductData("1", "P-009", "Katzenfutter Lachs", "Tierfutter", 550));
+		productRepository.save(new ProductData("1", "P-010", "Knochen Snack", "Tierfutter", 400));
 	}
-
 }

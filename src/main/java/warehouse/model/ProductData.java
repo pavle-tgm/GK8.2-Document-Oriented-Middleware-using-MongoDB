@@ -4,10 +4,12 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
+@Document(collation = "productData")
 public class ProductData {
 
-    @Id
+	@Id
 	private String ID;
 
 	private String warehouseID;
@@ -85,7 +87,7 @@ public class ProductData {
 	@Override
 	public String toString() {
 		String info = String.format("Product Info: WarehouseID = %s, ProductID = %s, ProductName = %s, ProductCategory = %s, ProductQuantity = %4.1f",
-			warehouseID, productID, productName, productCategory, productQuantity );
+				warehouseID, productID, productName, productCategory, productQuantity );
 		return info;
 	}
 }
